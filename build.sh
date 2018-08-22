@@ -2,13 +2,17 @@
 
 set -e
 
+blue="\e[34m"
+red="\e[31m"
+reset="\e[39m"
+
 build() {
 	target="$1"
 
-	echo >&2 "Building target $target (CC=\"$CC\", CLFAGS=\"$CFLAGS\")"
+	echo -e >&2 "${blue}Building target $target${reset} (CC=\"$CC\", CLFAGS=\"$CFLAGS\")"
 	CC="$CC" CFLAGS="$CFLAGS" make \
     && mv hello "hello-$target" \
-    || echo >&2 "Failed to build target $target"
+    || echo -e >&2 "${red}Failed to build target $target${reset}"
 }
 
 root=$(pwd)
@@ -30,4 +34,3 @@ for testcase in $(ls "$src_dir"); do
 	CC=clang CFLAGS="-fuse-ld=lld" build lld
 	CC=gcc CFLAGS="-fuse-ld=gold" build gold
 done
-
