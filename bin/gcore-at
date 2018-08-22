@@ -1,0 +1,15 @@
+#!/bin/sh
+
+at=$1
+shift
+cmd=$1
+corefile=$(basename -- "$cmd")-$at-core
+
+gdb -q \
+    -ex "break $at" \
+    -ex "run" \
+    -ex "eval \"shell echo 0xff > /proc/%d/coredump_filter\", (int)getpid()" \
+    -ex "gcore $corefile" \
+    -ex "set confirm off" \
+    -ex "quit" \
+    --args $@

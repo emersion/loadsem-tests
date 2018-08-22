@@ -1,0 +1,13 @@
+#!/bin/sh
+
+cmd=$1
+basename=$(basename -- "$cmd")
+corefile=$basename-starti-core
+
+gdb -q \
+    -ex "starti" \
+    -ex "shell sh -c \"echo 0xff > /proc/\\\$(pidof $basename)/coredump_filter\"" \
+    -ex "gcore $corefile" \
+    -ex "set confirm off" \
+    -ex "quit" \
+    --args $@
